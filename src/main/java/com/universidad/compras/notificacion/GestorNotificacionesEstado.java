@@ -1,9 +1,14 @@
 package com.universidad.compras.notificacion;
 
 import com.universidad.compras.modelo.Solicitud;
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.List;
 
+// Sujeto del Observer: unico punto por el que cambia el estado de una Solicitud.
+// Quien cambia el estado solo conoce este gestor, nunca a los observadores concretos.
+@Component
 public class GestorNotificacionesEstado {
     private final List<SolicitudEstadoObserver> observadores = new ArrayList<>();
 
