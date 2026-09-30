@@ -1,14 +1,22 @@
 package com.universidad.compras.estado;
 
 import com.universidad.compras.modelo.Solicitud;
+import com.universidad.compras.notificacion.GestorNotificacionesEstado;
 
+// Contexto del patron State: delega cada operacion en el objeto del estado actual
 public class SolicitudContexto {
     private final Solicitud solicitud;
+    private final GestorNotificacionesEstado notificaciones;
     private EstadoSolicitud estadoActual;
 
-    public SolicitudContexto(Solicitud solicitud) {
+    public SolicitudContexto(Solicitud solicitud, GestorNotificacionesEstado notificaciones) {
         this.solicitud = solicitud;
+        this.notificaciones = notificaciones;
         this.estadoActual = resolverEstadoInicial(solicitud.getEstado());
+    }
+
+    public SolicitudContexto(Solicitud solicitud) {
+        this(solicitud, new GestorNotificacionesEstado());
     }
 
     private EstadoSolicitud resolverEstadoInicial(String estado) {
@@ -24,9 +32,10 @@ public class SolicitudContexto {
         };
     }
 
+    // Toda transicion valida pasa por el gestor de notificaciones (Necesidad 3)
     public void cambiarEstado(EstadoSolicitud nuevoEstado) {
         this.estadoActual = nuevoEstado;
-        this.solicitud.setEstado(nuevoEstado.getNombre());
+        notificaciones.cambiarEstado(solicitud, nuevoEstado.getNombre());
     }
 
     public String aprobar() { return estadoActual.aprobar(this); }
